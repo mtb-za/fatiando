@@ -8,6 +8,7 @@ derivatives and total mass.
   vertical component of gravity :math:`g_z` using numerical integration
 * :func:`~fatiando.gravmag.transform.tga`: Calculate the amplitude of the
   total gradient (also called the analytic signal)
+* :func:`~fatiando.gravmag.transform.tilt`: Calculates the tilt,
 
 **Derivatives**
 
@@ -110,6 +111,52 @@ def tga(x, y, data, shape):
     dz = derivz(x, y, data, shape)
     res = numpy.sqrt(dx ** 2 + dy ** 2 + dz ** 2)
     return res
+
+
+def mstde(x, y, data, shape):
+    """
+    Multi-Scale Tilt Depth Estimation
+
+    Implements the method of van Buren (2013).
+
+    An empirical method for attempting to approximate the depth of the source of a
+    magnetic anomaly, based on altering tilt and continuation of the magnetic field
+    intensity.
+
+    **References**
+
+    Van Buren, Reece. 2013. “Multi-Scale Tilt Depth Estimation.” MSc Thesis,
+    Johannesberg: University of the Witwatersrand.
+    URI: http://mobile.wiredspace.wits.ac.za/bitstream/handle/10539/14011/MSc_Dissertation_RvanBuren_2013.pdf.
+    """
+
+
+def tilt(x, y, data, shape):
+    """
+    Calculates the magnetic tilt, as defined by Miller and Singh (1994).
+
+    Parameters:
+
+    * x, y : 1D-arrays
+        The x and y coordinates of the grid points
+    * data : 1D-array
+        The potential field at the grid points
+    * shape : tuple = (ny, nx)
+        The shape of the grid
+
+    Returns:
+
+    * tilt : 1D-array
+        The amplitude of the total gradient
+
+
+    """
+    tilt = atan( ( deriv(x, y, data, shape)/
+    derivz(x, y, data, shape) )/
+    sqrt( exp(deriv(x, y, data, shape)/
+    derivx(x, y, data, shape),2) ) )
+
+    return tilt
 
 
 def derivx(x, y, data, shape, order=1):
