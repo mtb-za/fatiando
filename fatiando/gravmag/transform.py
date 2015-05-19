@@ -133,7 +133,9 @@ def mstde(x, y, data, shape):
 
 def tilt(x, y, data, shape):
     """
-    Calculates the magnetic tilt, as defined by Miller and Singh (1994).
+    Calculates the magnetic tilt, as defined by Miller and Singh (1994):
+
+    tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{\\sqrt{(\\frac{df}{dx})^2}})
 
     Parameters:
 
