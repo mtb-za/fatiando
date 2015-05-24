@@ -23,6 +23,7 @@ derivatives and total mass.
 
 """
 import numpy
+from math import atan,sqrt
 
 
 def upcontinue(gz, height, xp, yp, dims):
@@ -119,9 +120,9 @@ def mstde(x, y, data, shape):
 
     Implements the method of van Buren (2013).
 
-    An empirical method for attempting to approximate the depth of the source of a
-    magnetic anomaly, based on altering tilt and continuation of the magnetic field
-    intensity.
+    An empirical method for attempting to approximate the depth of the source
+    of a magnetic anomaly, based on altering tilt and continuation of the
+    magnetic field intensity.
 
     **References**
 
@@ -137,6 +138,14 @@ def tilt(x, y, data, shape):
 
     tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{\\sqrt{(\\frac{df}{dx})^2}})
 
+    .. warning::
+
+        If the data is not in SI units, the derivatives will be in
+        strange units! I strongly recommend converting the data to SI
+        **before** calculating the derivative (use one of the unit conversion
+        functions of :mod:`fatiando.utils`). This way the derivative will be in
+        SI units and can be easily converted to what unit you want.
+
     Parameters:
 
     * x, y : 1D-arrays
@@ -149,14 +158,11 @@ def tilt(x, y, data, shape):
     Returns:
 
     * tilt : 1D-array
-        The amplitude of the total gradient
-
+        The tilt angle of the total field.
 
     """
-    tilt = atan( ( deriv(x, y, data, shape)/
-    derivz(x, y, data, shape) )/
-    sqrt( exp(deriv(x, y, data, shape)/
-    derivx(x, y, data, shape),2) ) )
+    horiz_deriv = derivx(x, y, data, shape)/derivy(x, y, data, shape)
+    tilt = numpy.arctan( ( derivz(x, y, data, shape) ) / numpy.sqrt( horiz_deriv**2 ) )
 
     return tilt
 
