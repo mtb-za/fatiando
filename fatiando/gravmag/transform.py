@@ -8,7 +8,10 @@ derivatives and total mass.
   vertical component of gravity :math:`g_z` using numerical integration
 * :func:`~fatiando.gravmag.transform.tga`: Calculate the amplitude of the
   total gradient (also called the analytic signal)
-* :func:`~fatiando.gravmag.transform.tilt`: Calculates the tilt,
+* :func:`~fatiando.gravmag.transform.mstde`: Multi-scale tilt depth estimation
+  method.
+* :func:`~fatiando.gravmag.transform.tilt`: Calculates the tilt angle
+* :func:`~fatiando.gravmag.transform.tdx`: Calculates the horizontal tilt angle
 
 **Derivatives**
 
@@ -18,6 +21,8 @@ derivatives and total mass.
   derivative of a potential field in the y-direction
 * :func:`~fatiando.gravmag.transform.derivz`: Calculate the n-th order
   derivative of a potential field in the z-direction
+* :func:`~fatiando.gravmag.transform.thdr`: Utility function to generate the
+  total horizontal derivative
 
 ----
 
@@ -124,6 +129,17 @@ def mstde(x, y, data, shape):
     of a magnetic anomaly, based on altering tilt and continuation of the
     magnetic field intensity.
 
+    This method will also work well on Total Gradient Amplitude, but care must
+    be taken to reduce noise.
+
+    .. warning::
+
+        If the data is not in SI units, the derivatives will be in
+        strange units! I strongly recommend converting the data to SI
+        **before** calculating the derivatives (use one of the unit conversion
+        functions of :mod:`fatiando.utils`). This way the derivative will be in
+        SI units and can be easily converted to what unit you want.
+
     **References**
 
     Van Buren, Reece. 2013. “Multi-Scale Tilt Depth Estimation.” MSc Thesis,
@@ -131,20 +147,15 @@ def mstde(x, y, data, shape):
     URI: http://mobile.wiredspace.wits.ac.za/bitstream/handle/10539/14011/MSc_Dissertation_RvanBuren_2013.pdf.
     """
 
+    tilted_data = tilt(x, y, data, shape)
+    pass
+
 
 def tilt(x, y, data, shape):
     """
     Calculates the magnetic tilt, as defined by Miller and Singh (1994):
 
-    tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{\\sqrt{(\\frac{df}{dx})^2}})
-
-    .. warning::
-
-        If the data is not in SI units, the derivatives will be in
-        strange units! I strongly recommend converting the data to SI
-        **before** calculating the derivative (use one of the unit conversion
-        functions of :mod:`fatiando.utils`). This way the derivative will be in
-        SI units and can be easily converted to what unit you want.
+    tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{\\sqrt{\\frac{df}{dx}^2 + \\frac{df}{dy}^2}})
 
     Parameters:
 
@@ -161,11 +172,42 @@ def tilt(x, y, data, shape):
         The tilt angle of the total field.
 
     """
-    horiz_deriv = derivx(x, y, data, shape)/derivy(x, y, data, shape)
-    tilt = numpy.arctan( ( derivz(x, y, data, shape) ) / numpy.sqrt( horiz_deriv**2 ) )
+    horiz_deriv = thdr(x, y, data, shape)
+    vert_deriv = derivz(x, y, data, shape)
+    tilt_value = vert_deriv/horiz_deriv
+    tilt = numpy.arctan2( tilt_value, tilt_value )
 
-    return tilt
+    return tiltd
 
+
+'''def tdx(x, y, data, shape):
+    """
+    Horizontal tilt angle, from Cooper and Cowan (2006):
+
+    tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{|total_horizonal_derivative|})
+
+    Parameters:
+
+    * x, y : 1D-arrays
+        The x and y coordinates of the grid points
+    * data : 1D-array
+        The potential field at the grid points
+    * shape : tuple = (ny, nx)
+        The shape of the grid
+
+    Returns:
+
+    * tilt : 1D-array
+        The tilt angle of the total field.
+
+    """
+    horiz_deriv = thdr(x, y, data, shape)
+    abs_vert_deriv = numpy.absolute(derivz(x, y, data, shape))
+    tilt_value = horiz_deriv/abs_vert_deriv
+    tdx_value = numpy.arctan2( tilt_value, abs_vert_deriv )
+
+    return tdx_value
+'''
 
 def derivx(x, y, data, shape, order=1):
     """
@@ -269,6 +311,34 @@ def derivz(x, y, data, shape, order=1):
     Fx, Fy = _getfreqs(x, y, data, shape)
     freqs = numpy.sqrt(Fx ** 2 + Fy ** 2)
     return _deriv(freqs, data, shape, order)
+
+
+def thdr(x, y, data, shape):
+    """
+    Total Horizontal Derivative
+
+    A useful thing used in many tilt angle filters:
+
+    sqrt( \\frac{df}{dx}^2 + \\frac{df}{dy}^2 )
+
+    Parameters:
+
+    * x, y : 1D-arrays
+        The x and y coordinates of the grid points
+    * data : 1D-array
+        The potential field at the grid points
+    * shape : tuple = (ny, nx)
+        The shape of the grid
+
+    Returns:
+
+    * tilt : 1D-array
+        The tilt angle of the total field.
+
+    """
+    total_horiz_deriv = numpy.sqrt( derivx(x, y, data, shape)**2 + derivy(x, y, data, shape)**2 )
+
+    return total_horiz_deriv
 
 
 def _getfreqs(x, y, data, shape):
