@@ -183,7 +183,7 @@ def tilt(x, y, data, shape):
     tilt_value = vert_deriv/horiz_deriv
     tilt = numpy.arctan2( tilt_value, tilt_value )
 
-    return tiltd
+    return tilt
 
 
 '''def tdx(x, y, data, shape):
@@ -360,43 +360,6 @@ def derivz(x, y, data, shape, order=1, method='fft'):
         The derivative
 
     """
-    Fx, Fy = _getfreqs(x, y, data, shape, )
-=======
-    Fx, Fy = _getfreqs(x, y, data, shape)
->>>>>>> parent of edbcf12... Merge branch 'master' into mstde
-    freqs = numpy.sqrt(Fx ** 2 + Fy ** 2)
-    return _deriv(freqs, data, shape, order)
-
-
-def thdr(x, y, data, shape, method = 'fd'):
-    """
-    Total Horizontal Derivative
-
-    A useful thing used in many tilt angle filters:
-
-    sqrt( \\frac{df}{dx}^2 + \\frac{df}{dy}^2 )
-
-    Parameters:
-
-    * x, y : 1D-arrays
-        The x and y coordinates of the grid points
-    * data : 1D-array
-        The potential field at the grid points
-    * shape : tuple = (ny, nx)
-        The shape of the grid
-
-    Returns:
-
-    * tilt : 1D-array
-        The tilt angle of the total field.
-
-    """
-    total_horiz_deriv = numpy.sqrt( derivx(x, y, data, shape)**2 + derivy(x, y, data, shape)**2 )
-
-    return total_horiz_deriv
-
-
-def _getfreqs(x, y, data, shape, order=1, method='fft'):
     assert method == 'fft', \
         "Invalid method '{}'".format(method)
     nx, ny = shape
@@ -434,3 +397,31 @@ def _fftfreqs(x, y, shape, padshape):
     dy = (y.max() - y.min())/(ny - 1)
     fy = 2*numpy.pi*numpy.fft.fftfreq(padshape[1], dy)
     return numpy.meshgrid(fy, fx)[::-1]
+
+
+def thdr(x, y, data, shape, method = 'fd'):
+    """
+    Total Horizontal Derivative
+
+    A useful thing used in many tilt angle filters:
+
+    sqrt( \\frac{df}{dx}^2 + \\frac{df}{dy}^2 )
+
+    Parameters:
+
+    * x, y : 1D-arrays
+        The x and y coordinates of the grid points
+    * data : 1D-array
+        The potential field at the grid points
+    * shape : tuple = (ny, nx)
+        The shape of the grid
+
+    Returns:
+
+    * tilt : 1D-array
+        The tilt angle of the total field.
+
+    """
+    total_horiz_deriv = numpy.sqrt( derivx(x, y, data, shape)**2 + derivy(x, y, data, shape)**2 )
+
+    return total_horiz_deriv
