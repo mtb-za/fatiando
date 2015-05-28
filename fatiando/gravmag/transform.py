@@ -209,7 +209,11 @@ def tilt(x, y, data, shape):
     return tdx_value
 '''
 
+<<<<<<< HEAD
+def derivx(x, y, data, shape, order=1, method='fd'):
+=======
 def derivx(x, y, data, shape, order=1):
+>>>>>>> parent of edbcf12... Merge branch 'master' into mstde
     """
     Calculate the derivative of a potential field in the x direction.
 
@@ -308,12 +312,16 @@ def derivz(x, y, data, shape, order=1):
         The derivative
 
     """
+<<<<<<< HEAD
+    Fx, Fy = _getfreqs(x, y, data, shape, )
+=======
     Fx, Fy = _getfreqs(x, y, data, shape)
+>>>>>>> parent of edbcf12... Merge branch 'master' into mstde
     freqs = numpy.sqrt(Fx ** 2 + Fy ** 2)
     return _deriv(freqs, data, shape, order)
 
 
-def thdr(x, y, data, shape):
+def thdr(x, y, data, shape, method = 'fd'):
     """
     Total Horizontal Derivative
 
@@ -341,7 +349,39 @@ def thdr(x, y, data, shape):
     return total_horiz_deriv
 
 
+<<<<<<< HEAD
+def _getfreqs(x, y, data, shape, order=1, method='fft'):
+    assert method == 'fft', \
+        "Invalid method '{}'".format(method)
+    nx, ny = shape
+    # Pad the array with the edge values to avoid instability
+    padded, padx, pady = _pad_data(data, shape)
+    kx, ky = _fftfreqs(x, y, shape, padded.shape)
+    deriv_ft = numpy.fft.fft2(padded)*numpy.sqrt(kx**2 + ky**2)**order
+    deriv = numpy.real(numpy.fft.ifft2(deriv_ft))
+    # Remove padding from derivative
+    return deriv[padx : padx + nx, pady : pady + ny].ravel()
+
+
+def _pad_data(data, shape):
+    n = _nextpow2(numpy.max(shape))
+    nx, ny = shape
+    padx = (n - nx)//2
+    pady = (n - ny)//2
+    padded = numpy.pad(data.reshape(shape), ((padx, padx), (pady, pady)),
+                       mode='edge')
+    return padded, padx, pady
+
+
+def _nextpow2(i):
+    buf = numpy.ceil(numpy.log(i)/numpy.log(2))
+    return int(2**buf)
+
+
+def _fftfreqs(x, y, shape, padshape):
+=======
 def _getfreqs(x, y, data, shape):
+>>>>>>> parent of edbcf12... Merge branch 'master' into mstde
     """
     Get two 2D-arrays with the wave numbers in the x and y directions.
     """
