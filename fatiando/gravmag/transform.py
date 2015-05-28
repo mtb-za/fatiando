@@ -1,11 +1,12 @@
 """
-Space domain potential field transformations, like upward continuation,
-derivatives and total mass.
+Potential field transformations, like upward continuation and derivatives.
+
+.. note:: Most, if not all, functions here required gridded data.
 
 **Transformations**
 
-* :func:`~fatiando.gravmag.transform.upcontinue`: Upward continuation of the
-  vertical component of gravity :math:`g_z` using numerical integration
+* :func:`~fatiando.gravmag.transform.upcontinue`: Upward continuation of
+  gridded potential field data on a level surface
 * :func:`~fatiando.gravmag.transform.tga`: Calculate the amplitude of the
   total gradient (also called the analytic signal)
 * :func:`~fatiando.gravmag.transform.mstde`: Multi-scale tilt depth estimation
@@ -16,9 +17,9 @@ derivatives and total mass.
 **Derivatives**
 
 * :func:`~fatiando.gravmag.transform.derivx`: Calculate the n-th order
-  derivative of a potential field in the x-direction
+  derivative of a potential field in the x-direction (North-South)
 * :func:`~fatiando.gravmag.transform.derivy`: Calculate the n-th order
-  derivative of a potential field in the y-direction
+  derivative of a potential field in the y-direction (East-West)
 * :func:`~fatiando.gravmag.transform.derivz`: Calculate the n-th order
   derivative of a potential field in the z-direction
 * :func:`~fatiando.gravmag.transform.thdr`: Utility function to generate the
@@ -27,6 +28,7 @@ derivatives and total mass.
 ----
 
 """
+from __future__ import division
 import numpy
 from math import atan,sqrt
 
@@ -82,7 +84,7 @@ def upcontinue(gz, height, xp, yp, dims):
     return gzcont
 
 
-def tga(x, y, data, shape):
+def tga(x, y, data, shape, method='fd'):
     """
     Calculate the total gradient amplitude.
 
@@ -103,8 +105,12 @@ def tga(x, y, data, shape):
         The x and y coordinates of the grid points
     * data : 1D-array
         The potential field at the grid points
-    * shape : tuple = (ny, nx)
+    * shape : tuple = (nx, ny)
         The shape of the grid
+    * method : string
+        The method used to calculate the horizontal derivatives. Options are:
+        ``'fd'`` for finite-difference (more stable) or ``'fft'`` for the Fast
+        Fourier Transform. The z derivative is always calculated by FFT.
 
     Returns:
 
@@ -112,8 +118,8 @@ def tga(x, y, data, shape):
         The amplitude of the total gradient
 
     """
-    dx = derivx(x, y, data, shape)
-    dy = derivy(x, y, data, shape)
+    dx = derivx(x, y, data, shape, method=method)
+    dy = derivy(x, y, data, shape, method=method)
     dz = derivz(x, y, data, shape)
     res = numpy.sqrt(dx ** 2 + dy ** 2 + dz ** 2)
     return res
@@ -209,11 +215,8 @@ def tilt(x, y, data, shape):
     return tdx_value
 '''
 
-<<<<<<< HEAD
+
 def derivx(x, y, data, shape, order=1, method='fd'):
-=======
-def derivx(x, y, data, shape, order=1):
->>>>>>> parent of edbcf12... Merge branch 'master' into mstde
     """
     Calculate the derivative of a potential field in the x direction.
 
@@ -231,10 +234,14 @@ def derivx(x, y, data, shape, order=1):
         The x and y coordinates of the grid points
     * data : 1D-array
         The potential field at the grid points
-    * shape : tuple = (ny, nx)
+    * shape : tuple = (nx, ny)
         The shape of the grid
     * order : int
         The order of the derivative
+    * method : string
+        The method used to calculate the derivatives. Options are:
+        ``'fd'`` for central finite-differences (more stable) or ``'fft'``
+        for the Fast Fourier Transform.
 
     Returns:
 
@@ -242,13 +249,30 @@ def derivx(x, y, data, shape, order=1):
         The derivative
 
     """
-    Fx = _getfreqs(x, y, data, shape)[0].astype('complex')
-    # Multiply by 1j because I don't multiply it in _deriv (this way _deriv can
-    # be used for the z derivative as well)
-    return _deriv(Fx * 1j, data, shape, order)
+    nx, ny = shape
+    assert method in ['fft', 'fd'], \
+        'Invalid method "{}".'.format(method)
+    if method == 'fft':
+        # Pad the array with the edge values to avoid instability
+        padded, padx, pady = _pad_data(data, shape)
+        kx, _ = _fftfreqs(x, y, shape, padded.shape)
+        deriv_ft = numpy.fft.fft2(padded)*(kx*1j)**order
+        deriv_pad = numpy.real(numpy.fft.ifft2(deriv_ft))
+        # Remove padding from derivative
+        deriv = deriv_pad[padx : padx + nx, pady : pady + ny]
+    elif method == 'fd':
+        datamat = data.reshape(shape)
+        dx = (x.max() - x.min())/(nx - 1)
+        deriv = numpy.empty_like(datamat)
+        deriv[1:-1, :] = (datamat[2:, :] - datamat[:-2, :])/(2*dx)
+        deriv[0, :] = deriv[1, :]
+        deriv[-1, :] = deriv[-2, :]
+        if order > 1:
+            deriv = derivx(x, y, deriv, shape, order=order - 1, method='fd')
+    return deriv.ravel()
 
 
-def derivy(x, y, data, shape, order=1):
+def derivy(x, y, data, shape, order=1, method='fd'):
     """
     Calculate the derivative of a potential field in the y direction.
 
@@ -266,10 +290,14 @@ def derivy(x, y, data, shape, order=1):
         The x and y coordinates of the grid points
     * data : 1D-array
         The potential field at the grid points
-    * shape : tuple = (ny, nx)
+    * shape : tuple = (nx, ny)
         The shape of the grid
     * order : int
         The order of the derivative
+    * method : string
+        The method used to calculate the derivatives. Options are:
+        ``'fd'`` for central finite-differences (more stable) or ``'fft'``
+        for the Fast Fourier Transform.
 
     Returns:
 
@@ -277,13 +305,30 @@ def derivy(x, y, data, shape, order=1):
         The derivative
 
     """
-    Fy = _getfreqs(x, y, data, shape)[1].astype('complex')
-    # Multiply by 1j because I don't multiply it in _deriv (this way _deriv can
-    # be used for the z derivative as well)
-    return _deriv(Fy * 1j, data, shape, order)
+    nx, ny = shape
+    assert method in ['fft', 'fd'], \
+        'Invalid method "{}".'.format(method)
+    if method == 'fft':
+        # Pad the array with the edge values to avoid instability
+        padded, padx, pady = _pad_data(data, shape)
+        _, ky = _fftfreqs(x, y, shape, padded.shape)
+        deriv_ft = numpy.fft.fft2(padded)*(ky*1j)**order
+        deriv_pad = numpy.real(numpy.fft.ifft2(deriv_ft))
+        # Remove padding from derivative
+        deriv = deriv_pad[padx : padx + nx, pady : pady + ny]
+    elif method == 'fd':
+        datamat = data.reshape(shape)
+        dy = (y.max() - y.min())/(ny - 1)
+        deriv = numpy.empty_like(datamat)
+        deriv[:, 1:-1] = (datamat[:, 2:] - datamat[:, :-2])/(2*dy)
+        deriv[:, 0] = deriv[:, 1]
+        deriv[:, -1] = deriv[:, -2]
+        if order > 1:
+            deriv = derivy(x, y, deriv, shape, order=order - 1, method='fd')
+    return deriv.ravel()
 
 
-def derivz(x, y, data, shape, order=1):
+def derivz(x, y, data, shape, order=1, method='fft'):
     """
     Calculate the derivative of a potential field in the z direction.
 
@@ -301,10 +346,13 @@ def derivz(x, y, data, shape, order=1):
         The x and y coordinates of the grid points
     * data : 1D-array
         The potential field at the grid points
-    * shape : tuple = (ny, nx)
+    * shape : tuple = (nx, ny)
         The shape of the grid
     * order : int
         The order of the derivative
+    * method : string
+        The method used to calculate the derivatives. Options are:
+        ``'fft'`` for the Fast Fourier Transform.
 
     Returns:
 
@@ -312,7 +360,6 @@ def derivz(x, y, data, shape, order=1):
         The derivative
 
     """
-<<<<<<< HEAD
     Fx, Fy = _getfreqs(x, y, data, shape, )
 =======
     Fx, Fy = _getfreqs(x, y, data, shape)
@@ -349,7 +396,6 @@ def thdr(x, y, data, shape, method = 'fd'):
     return total_horiz_deriv
 
 
-<<<<<<< HEAD
 def _getfreqs(x, y, data, shape, order=1, method='fft'):
     assert method == 'fft', \
         "Invalid method '{}'".format(method)
@@ -379,24 +425,12 @@ def _nextpow2(i):
 
 
 def _fftfreqs(x, y, shape, padshape):
-=======
-def _getfreqs(x, y, data, shape):
->>>>>>> parent of edbcf12... Merge branch 'master' into mstde
     """
     Get two 2D-arrays with the wave numbers in the x and y directions.
     """
-    ny, nx = shape
-    dx = float(x.max() - x.min()) / float(nx - 1)
-    fx = numpy.fft.fftfreq(nx, dx)
-    dy = float(y.max() - y.min()) / float(ny - 1)
-    fy = numpy.fft.fftfreq(ny, dy)
-    return numpy.meshgrid(fx, fy)
-
-
-def _deriv(freqs, data, shape, order):
-    """
-    Calculate a generic derivative using the FFT.
-    """
-    fgrid = (2. * numpy.pi) * numpy.fft.fft2(numpy.reshape(data, shape))
-    deriv = numpy.real(numpy.fft.ifft2((freqs ** order) * fgrid).ravel())
-    return deriv
+    nx, ny = shape
+    dx = (x.max() - x.min())/(nx - 1)
+    fx = 2*numpy.pi*numpy.fft.fftfreq(padshape[0], dx)
+    dy = (y.max() - y.min())/(ny - 1)
+    fy = 2*numpy.pi*numpy.fft.fftfreq(padshape[1], dy)
+    return numpy.meshgrid(fy, fx)[::-1]
