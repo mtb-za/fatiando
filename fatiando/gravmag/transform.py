@@ -10,9 +10,11 @@ Potential field transformations, like upward continuation and derivatives.
 * :func:`~fatiando.gravmag.transform.tga`: Calculate the amplitude of the
   total gradient (also called the analytic signal)
 * :func:`~fatiando.gravmag.transform.mstde`: Multi-scale tilt depth estimation
-  method.
+  method
 * :func:`~fatiando.gravmag.transform.tilt`: Calculates the tilt angle
 * :func:`~fatiando.gravmag.transform.tdx`: Calculates the horizontal tilt angle
+* :func:`~fatiando.gravmag.transform.thdr`: Calculates the total horizontal
+  derivative which is used in some other filters
 
 **Derivatives**
 
@@ -22,8 +24,6 @@ Potential field transformations, like upward continuation and derivatives.
   derivative of a potential field in the y-direction (East-West)
 * :func:`~fatiando.gravmag.transform.derivz`: Calculate the n-th order
   derivative of a potential field in the z-direction
-* :func:`~fatiando.gravmag.transform.thdr`: Utility function to generate the
-  total horizontal derivative
 
 ----
 
@@ -140,28 +140,32 @@ def mstde(x, y, data, shape):
 
     .. warning::
 
-        If the data is not in SI units, the derivatives will be in
-        strange units! I strongly recommend converting the data to SI
-        **before** calculating the derivatives (use one of the unit conversion
-        functions of :mod:`fatiando.utils`). This way the derivative will be in
-        SI units and can be easily converted to what unit you want.
+        This algorithm expects Reduced to Pole data. Within `fatiando`, the
+        recommended method is to use equivalent layers to achieve this. See
+        `cookbook/gravmag_eqlayer_pel_polereduc.py` and
+        `cookbook/gravmag_eqlayer_polereduc.py` for an idea of how this can be
+        done.
 
     **References**
 
-    Van Buren, Reece. 2013. “Multi-Scale Tilt Depth Estimation.” MSc Thesis,
+    Van Buren, Reece. 2013."Multi-Scale Tilt Depth Estimation." MSc Thesis,
     Johannesberg: University of the Witwatersrand.
-    URI: http://mobile.wiredspace.wits.ac.za/bitstream/handle/10539/14011/MSc_Dissertation_RvanBuren_2013.pdf.
+    URI: http://mobile.wiredspace.wits.ac.za/bitstream/handle/10539/14011/
+    MSc_Dissertation_RvanBuren_2013.pdf.
     """
-
-    tilted_data = tilt(x, y, data, shape)
-    pass
+    RTP_TDR = tilt(x, y, data, shape)
+    AREA = numpy.arctan2( numpy.tan( (numpy.pi/2)-numpy.arctan2(RTP_TDR) ) )
+    return AREA
 
 
 def tilt(x, y, data, shape):
     """
     Calculates the magnetic tilt, as defined by Miller and Singh (1994):
 
-    tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{\\sqrt{\\frac{df}{dx}^2 + \\frac{df}{dy}^2}})
+    .. math::
+
+    tilt(f) = tan^{-1}(\\frac{\\frac{dT}{dz}}{\\sqrt{\\frac{dT}{dx}^2 +
+    \\frac{dT}{dy}^2}})
 
     Parameters:
 
@@ -177,20 +181,27 @@ def tilt(x, y, data, shape):
     * tilt : 1D-array
         The tilt angle of the total field.
 
+    **References**
+
+    Miller, Hugh G, and Vijay Singh. 1994. "Potential Field Tilt --- a New
+    Concept for Location of Potential Field Sources."
+    Journal of Applied Geophysics 32 (2--3): 213–17.
+    doi:10.1016/0926-9851(94)90022-1.
+
+
     """
     horiz_deriv = thdr(x, y, data, shape)
     vert_deriv = derivz(x, y, data, shape)
-    tilt_value = vert_deriv/horiz_deriv
-    tilt = numpy.arctan2( tilt_value, tilt_value )
+    tilt = numpy.arctan2( vert_deriv, horiz_deriv )
 
     return tilt
 
 
-'''def tdx(x, y, data, shape):
+def tdx(x, y, data, shape):
     """
     Horizontal tilt angle, from Cooper and Cowan (2006):
 
-    tilt(f) = tan^{-1}(\\frac{\\frac{df}{dz}}{|total_horizonal_derivative|})
+    tilt(f) = tan^{-1}(\\frac{\\frac{dT}{dz}}{|total_horizonal_derivative|})
 
     Parameters:
 
@@ -209,11 +220,9 @@ def tilt(x, y, data, shape):
     """
     horiz_deriv = thdr(x, y, data, shape)
     abs_vert_deriv = numpy.absolute(derivz(x, y, data, shape))
-    tilt_value = horiz_deriv/abs_vert_deriv
-    tdx_value = numpy.arctan2( tilt_value, abs_vert_deriv )
+    tdx_value = numpy.arctan2( horiz_deriv, abs_vert_deriv )
 
     return tdx_value
-'''
 
 
 def derivx(x, y, data, shape, order=1, method='fd'):
@@ -399,13 +408,13 @@ def _fftfreqs(x, y, shape, padshape):
     return numpy.meshgrid(fy, fx)[::-1]
 
 
-def thdr(x, y, data, shape, method = 'fd'):
+def thdr(x, y, data, shape):
     """
     Total Horizontal Derivative
 
-    A useful thing used in many tilt angle filters:
+    A useful product used in some enhanced tilt angle filters:
 
-    sqrt( \\frac{df}{dx}^2 + \\frac{df}{dy}^2 )
+    THDR = sqrt( \\frac{dT}{dx}^2 + \\frac{dT}{dy}^2 )
 
     Parameters:
 
@@ -421,7 +430,14 @@ def thdr(x, y, data, shape, method = 'fd'):
     * tilt : 1D-array
         The tilt angle of the total field.
 
+    **References**
+
+    Verduzco, Bruno, J. Derek Fairhead, Chris M. Green, and Chris MacKenzie.
+    2004. "New Insights into Magnetic Derivatives for Structural Mapping."
+    The Leading Edge 23 (2): 116–19. doi:10.1190/1.1651454
+
     """
-    total_horiz_deriv = numpy.sqrt( derivx(x, y, data, shape)**2 + derivy(x, y, data, shape)**2 )
+    total_horiz_deriv = numpy.sqrt( derivx(x, y, data, shape)**2\
+     + derivy(x, y, data, shape)**2 )
 
     return total_horiz_deriv
