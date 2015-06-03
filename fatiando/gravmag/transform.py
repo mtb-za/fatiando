@@ -185,7 +185,7 @@ def tilt(x, y, data, shape):
 
     Miller, Hugh G, and Vijay Singh. 1994. "Potential Field Tilt --- a New
     Concept for Location of Potential Field Sources."
-    Journal of Applied Geophysics 32 (2--3): 213–17.
+    Journal of Applied Geophysics 32 (2--3): 213-17.
     doi:10.1016/0926-9851(94)90022-1.
 
 
@@ -434,7 +434,7 @@ def thdr(x, y, data, shape):
 
     Verduzco, Bruno, J. Derek Fairhead, Chris M. Green, and Chris MacKenzie.
     2004. "New Insights into Magnetic Derivatives for Structural Mapping."
-    The Leading Edge 23 (2): 116–19. doi:10.1190/1.1651454
+    The Leading Edge 23 (2): 116-19. doi:10.1190/1.1651454
 
     """
     total_horiz_deriv = numpy.sqrt( derivx(x, y, data, shape)**2\
