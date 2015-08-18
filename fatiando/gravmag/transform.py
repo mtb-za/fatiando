@@ -125,7 +125,7 @@ def tga(x, y, data, shape, method='fd'):
     return res
 
 
-def mstde(x, y, data, shape):
+def mstde(x, y, data, shape, upcontinue, interval, use_tga = True):
     """
     Multi-Scale Tilt Depth Estimation
 
@@ -153,6 +153,7 @@ def mstde(x, y, data, shape):
     URI: http://mobile.wiredspace.wits.ac.za/bitstream/handle/10539/14011/
     MSc_Dissertation_RvanBuren_2013.pdf.
     """
+    levels = range(0,upcontinue,interval)
     RTP_TDR = tilt(x, y, data, shape)
     AREA = numpy.arctan2( numpy.tan( (numpy.pi/2)-numpy.arctan2(RTP_TDR) ) )
     return AREA

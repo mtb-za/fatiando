@@ -148,3 +148,7 @@ def test_laplace_from_potential():
     assert np.all(np.abs(laplace) <= 1e-10), \
         "Max: {} Mean: {} STD: {}".format(
             laplace.max(), laplace.mean(), laplace.std())
+
+def test_transform_tilt():
+    "gravmag.transform tilt returns gradient correctly."
+    pass

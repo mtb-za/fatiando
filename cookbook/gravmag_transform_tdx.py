@@ -17,7 +17,7 @@ tf = utils.contaminate(prism.tf(xp, yp, zp, model, inc, dec), 0.001,
 # Need to convert gz to SI units so that the result is also in SI
 tilted_data = transform.tdx(xp, yp, utils.nt2si(tf), shape)
 total_grad_amp = transform.tga(xp, yp, utils.nt2si(tf), shape)
-tilted_tga = transform.tdx( xp, yp, total_grad_amp, shape )
+tilted_tga = transform.thdr( xp, yp, total_grad_amp, shape )
 
 mpl.figure()
 mpl.subplot(2, 2, 1)
