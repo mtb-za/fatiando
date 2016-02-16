@@ -10,7 +10,40 @@ Version (development)
 
 **Changes**:
 
-* **IMPORTANT BUG FIX**: ``fatiando,gridder.regular`` and many other places in
+* **New** obtain a synthetic convolutional seismogram in
+  ``fatiando.seismic.conv``. It can be given a depth model that will be 
+  converted to a time model before generating the synthetic seismogram.
+  (`PR 190 <https://github.com/fatiando/fatiando/pull/190>`__)
+* **Refactor** ``fatiando.inversion``. Completely redesigned classes make
+  implementing new inversions simpler. Subclassing ``Misfit`` is simpler, with
+  fewer parameters necessary. The usage of existing inversions has changed
+  little. A **new dependency** ``future`` was added to ease the transition to
+  support Python 3.
+  (`PR 127 <https://github.com/fatiando/fatiando/pull/127>`__)
+* Fix the broken software carpentry links in ``develop.rst``.
+  (`PR 245 <https://github.com/fatiando/fatiando/pull/245>`__)
+* Fix the doctest for ``fatiando.gravmag.tensor.center_of_mass``.
+  (`PR 242 <https://github.com/fatiando/fatiando/pull/242>`__)
+* **BUG FIX**: Tesseroid computations failed (silently) when tesseroids were
+  smaller than 1e-6 degrees on a side (~ 10 cm). Code now ignores these
+  tesseroids on input and warns the user about it. If a tesseroid becomes
+  smaller than this during adaptive discretization, the tesseroid effect will
+  be computed without division.  The user will be warned when this happens.
+  (`PR 228 <https://github.com/fatiando/fatiando/pull/228>`__)
+* **New** reduction to the pole and upward continuation with FFT in
+  ``fatiando.gravmag.transform``. The pole reduction allows both remanent and
+  induced magnetization. Upward continuation is more stable and faster than the
+  old space domain approach that was implemented.
+  (`PR 156 <https://github.com/fatiando/fatiando/pull/156>`__)
+* **IMPORTANT BUG FIX**: Fixed wrong ordering of nodes in
+  ``fatiando.mesher.PointGrid``. The order of nodes had the same problem as the
+  regular grids (fixed in
+  `196 <https://github.com/fatiando/fatiando/pull/196>`__). This was not caught
+  before because ``PointGrid`` didn't use ``gridder.regular`` to generate its
+  internal regular grid. This is an example of why reuse is a good thing! Tests
+  now should catch any future problems.
+  (`PR 209 <https://github.com/fatiando/fatiando/pull/209>`__)
+* **IMPORTANT BUG FIX**: ``fatiando.gridder.regular`` and many other places in
   Fatiando where using the wrong convention for x, y dimensions.
   x should point North and y East. Thus, a data matrix (regular grid) should
   have x varying in the lines and y varying in the columns. This is **oposite**
