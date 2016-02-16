@@ -1,25 +1,65 @@
-.. title:: Fatiando a Terra
+.. title:: Fatiando a Terra: modeling and inversion
 
-Fatiando a Terra: modeling and inversion in geophysics
-======================================================
+.. raw:: html
 
-An easy and flexible way to perform and implement geophysical data analysis.
-All from inside the powerful Python_ language.
+    <div class="row" style="margin-top: 60px">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <img src="_static/fatiando-banner-homepage.png" width="100%"
+                style="margin-bottom: 50px;"></img>
+            </div>
+        <div class="col-md-2">
+        </div>
+    </div>
 
-Fatiando is built on top of the `Scipy`_ ecosystem: Numpy_, Cython_,
-matplotlib_, Mayavi_, etc.
-Current capabilities include:
-
-* :ref:`Data processing <fatiando_gravmag>`
-* :ref:`Generate synthetic data <fatiando_gravmag>`
-* :ref:`Forward modeling <fatiando_gravmag>`
-* :ref:`Inversion <fatiando_inversion>`
-* :ref:`2D and 3D visualization <fatiando_vis>`
+    <div class="text-center" style="font-size: 16pt; margin-bottom: 50px;">
 
 
-Browse the :ref:`Cookbook <cookbook>`
-for examples of what Fatiando can do.
+An open-source Python library for modeling and inversion in geophysics.
 
+Our goal is provide a comprehensive and extensible framework
+for geophysical data analysis and the development of new methodologies.
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    <div class="row alert alert-info">
+
+    <div class="col-md-4">
+
+**Research:** Fatiando allows you to write Python scripts to
+perform your data analysis and generate figures in a reproducible way.
+
+.. raw:: html
+
+    </div>
+    <div class="col-md-4">
+
+**Development:** Designed for extensibility, Fatiando offers tools for users to
+build upon the existing infrastructure and develop new inversion methods.
+We take care of the boilerplate.
+
+.. raw:: html
+
+    </div>
+    <div class="col-md-4">
+
+**Teaching:** Fatiando can be combined with the `Jupyter notebook`_ to make rich, interactive
+documents. Great for teaching fundamental concepts of geophysics.
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    </div> <!-- Row -->
+
+.. _Jupyter notebook: https://jupyter.org/
 .. _Python: https://www.python.org/
 .. _matplotlib: http://matplotlib.org/
 .. _Mayavi: http://code.enthought.com/projects/mayavi/
@@ -27,58 +67,175 @@ for examples of what Fatiando can do.
 .. _Scipy: http://scipy.org/
 .. _Cython: http://www.cython.org/
 
+.. raw:: html
 
-.. important::
+    <div class="row">
 
-    Fatiando is research software **made by scientists**.
-    Please :ref:`cite <cite>` it in your publications if you used it.
-    Citations help us justify the effort
-    that goes into building and maintenance.
+    <div class="col-md-12">
 
 .. raw:: html
 
-    <div class="container-fluid">
-    <div class="row">
-    <div class="col-md-4">
-    <h2>Getting help and contributing</h2>
+    <h2>Overview</h2>
 
-There are many ways to get in contact with us:
+    <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <h3><a href="api/gravmag.html">Gravity and magnetics</a></h3>
+            <p>
+            Modeling, inversion, and processing for potential field methods.
+            </p>
+            <em>
+            3D forward modeling with prisms,
+            polygonal prisms, spheres, and tesseroids.
+            Handles the potential, acceleration,
+            gradient tensor, magnetic induction, total field magnetic anomaly.
+            </em>
+        </div>
+        <div class="col-md-6">
+            <h3><a href="api/seismic.html">Seismology and Seismics</a></h3>
+            <p>
+            Simple modeling functions for seismics and seismology.
+            </p>
+            <em>
+            Toy problems for: Cartesian straight-ray tomography,
+            VSP, epicenter estimation.
+            Experimental finite-difference wave propagation.
+            </em>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3><a href="api/inversion.html">Inverse Problems</a></h3>
+            <p>
+            API for building inverse problem solvers.
+            </p>
+            <em>
+            Easily prototype a new inversion.
+            Simple and uniform sintax for running invsersions.
+            Ready-made regularization (damping, smoothness, total variation).
+            </em>
+        </div>
+        <div class="col-md-6">
+            <h3><a href="api/vis.html">2D and 3D plotting</a></h3>
+            <p>
+            Utilities for plotting with
+            <a href="http://matplotlib.org/">matplotlib</a>
+            and
+            <a href="http://code.enthought.com/projects/mayavi/">Mayavi</a>.
+            </p>
+            <em>
+            Better defaults for some matplotlib functions,
+            plot 3D objects from <code>fatiando.mesher</code> in Mayavi,
+            automate common plotting tasks.
+            </em>
+        </div>
+    </div>
+    </div>
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    </div><!-- Row -->
+
+.. raw:: html
+
+    <div class="row">
+
+    <div class="col-md-6">
+    <h2>Getting started</h2>
+
+See the :ref:`install instructions <install>` to set up your computer and
+install Fatiando.
+
+Once you have everything installed,
+take a look at the :ref:`Documentation <docs>`
+for a detailed tour of the library.
+You can also browse the :ref:`Cookbook <cookbook>`
+for examples of what Fatiando can do.
+
+.. raw:: html
+
+    <div class="alert alert-success">
+    <h4><strong>Support us!</strong></h4>
+
+Fatiando is research software **made by scientists**.
+See :ref:`Citing <cite>` to find out how to cite it in your publications.
+
+.. raw:: html
+
+    </div> <!-- Alert bubble -->
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    <div class="col-md-6">
+    <h2>Getting help</h2>
+
+There are many ways to contact us:
 
 * Write to our `mailing list`_.
-* Report an `issue on Github`_.
-* Tweet `@leouieda`_.
-* Mention `+Fatiando a Terra`_ on Google+.
+* Join us on our open `Gitter chat room`_.
+* Report bugs through `Github`_.
 
-We welcome feedback, bug reports, feature requests, code contributions,
+If you come across a bug, please include in your message: your operating
+system, Python version, Fatiando version, code that generated the error, the
+full error message.
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    </div><!-- Row -->
+
+.. raw:: html
+
+    <div class="row">
+
+.. raw:: html
+
+    <div class="col-md-6">
+    <h2>Contributing</h2>
+
+**You don't need to be a programmer to contribute.**
+You can start by sending us your
+**feedback**: bug reports, feature requests, code contributions,
 spelling corrections, usage examples, etc.
 
+We need a lot of help improving the **documentation**.
+You can help by reporting typos, suggesting new sections and improvements,
+and anything that you think would make the docs better in any way.
+
+If you  want to mess with the **code**,
+take a look at our :ref:`Developer Guide <develop>`.
+Don't be afraid to ask for help getting started!
+
 .. _mailing list: https://groups.google.com/d/forum/fatiando
-.. _issue on Github: https://github.com/fatiando/fatiando/issues?q=is%3Aopen
-.. _@leouieda: https://twitter.com/leouieda
+.. _issues on Github: https://github.com/fatiando/fatiando/issues?q=is%3Aopen
+.. _Github: https://github.com/fatiando/fatiando/issues?q=is%3Aopen
 .. _+Fatiando a Terra: https://plus.google.com/+FatiandoOrg
+.. _Gitter chat room: https://gitter.im/fatiando/fatiando
 
 .. raw:: html
 
     </div>
-    <div class="col-md-4">
-    <h2>Documentation</h2>
-
-.. toctree::
-    :maxdepth: 1
-
-    license.rst
-    install.rst
-    changelog.rst
-    api/fatiando.rst
-    develop.rst
-    contributors.rst
-    cookbook.rst
 
 .. raw:: html
 
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
     <h2>Announcements</h2>
+
+* **October 2014**: Fatiando was featured on volume 89 of the bulletin of the
+  Brazilian Geophysical Society (SBGf). Read it on page 13 of the `PDF file
+  <http://sys2.sbgf.org.br/portal/images/stories/Arquivos/Boletim_89-2014.pdf>`__
+  (in Portuguese).
 
 * **July 2014**: We presented a poster at Scipy 2014 about the
   ``fatiando.inversion`` package. See the
@@ -90,18 +247,46 @@ spelling corrections, usage examples, etc.
   of the presentation and proceedings are on Github.
   Watch a recorded version `on Youtube <http://youtu.be/Ec38h1oB8cc>`__.
 
+Read :ref:`all announcements <news>`.
+
 .. raw:: html
 
     </div>
-    </div>
-    </div>
 
+.. raw:: html
+
+    </div> <!-- Row -->
+
+.. raw:: html
+
+    <div class="row" style="margin-top: 50px;">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <div class="text-center" style="margin-bottom: 20px;">
+                Watch Leo give a presentation about Fatiando at Scipy 2013.
+            </div>
+            <div class="responsive-embed">
+                <iframe width="100%" height="400"
+                src="https://www.youtube.com/embed/Ec38h1oB8cc" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
     :hidden:
 
+    news.rst
+    license.rst
     cite.rst
+    changelog.rst
+    install.rst
+    api/fatiando.rst
+    develop.rst
+    contributors.rst
+    cookbook.rst
     docs.rst
-
-

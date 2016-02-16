@@ -3,20 +3,17 @@ import sys
 import os
 import datetime
 import sphinx_bootstrap_theme
+import matplotlib as mpl
+mpl.use("Agg")
 
 # Sphinx needs to be able to import fatiando to use autodoc
 sys.path.append(os.path.pardir)
-# and the cookbook.py module to build the cookbook
-sys.path.append(os.path.split(os.path.abspath(__file__))[0])
 
 from fatiando import __version__, __commit__
-import cookbook
-
-# Build the cookbook recipes
-cookbook.build(os.path.join(os.pardir, 'cookbook'))
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.doctest',
@@ -24,6 +21,11 @@ extensions = [
     'sphinx.ext.extlinks',
     'matplotlib.sphinxext.plot_directive',
 ]
+
+# Configure the inline plots from matplotlib plot_directive
+plot_formats = [("png", 90)]
+plot_html_show_formats = False
+plot_html_show_source_link = False
 
 # Sphinx project configuration
 templates_path = ['_templates']
@@ -37,8 +39,8 @@ master_doc = 'index'
 year = datetime.date.today().year
 project = u'Fatiando a Terra'
 copyright = u'2010-{:d}, Leonardo Uieda'.format(year)
-if len(__version__.split('-')) > 1:
-    version = '-'.join([__version__.split('-')[0], 'dev'])
+if len(__version__.split('-')) > 1 or __version__ == 'unknown':
+    version = 'dev'
 else:
     version = __version__
 # I'll use the release to place the commit hash at the footer of the site
@@ -53,14 +55,14 @@ rst_epilog = """
 """.format(doi=doi, year=year)
 
 html_last_updated_fmt = '%b %d, %Y'
-html_title = 'Fatiando a Terra'
+html_title = 'fatiando {} documentation'.format(version)
 html_short_title = 'Fatiando a Terra'
-html_logo = '_static/fatiando-logo-noborder.png'
+html_logo = '_static/fatiando-logo.png'
 html_favicon = u'favicon.ico'
 html_static_path = ['_static']
 html_extra_path = ['.nojekyll', 'CNAME']
 html_use_smartypants = True
-pygments_style = 'sphinx'
+pygments_style = 'default'
 add_function_parentheses = False
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
@@ -96,18 +98,17 @@ html_theme_options = {
     'navbar_title': 'fatiando',
     'navbar_site_name': "Site",
     'navbar_links': [
-        ("Cite us", "cite"),
-        ("Install", "install"),
-        ("Docs", "docs"),
+        ("Installing", "install"),
+        ("Documentation", "docs"),
+        ("Cookbook", "cookbook"),
+        ("Developer Guide", "develop"),
         ('<i class="fa fa-github-square fa-lg" title="Source code on Github"></i>',
             "https://github.com/fatiando/fatiando", True),
-        ('<i class="fa fa-envelope fa-lg" title="Mailing list"></i>',
-            "https://groups.google.com/d/forum/fatiando", True),
     ],
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': False,
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': True,
+    'navbar_pagenav': False,
     # Tab name for the current pages TOC. (Default: "Page")
     'navbar_pagenav_name': "Page",
     # Global TOC depth for "site" navbar tab. (Default: 1)
@@ -118,7 +119,7 @@ html_theme_options = {
     # non-hidden ``toctree`` directives in the same page, or else the build
     # will break.
     # Values: "true" (default) or "false"
-    'globaltoc_includehidden': "true",
+    'globaltoc_includehidden': "false",
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
     'navbar_class': "navbar navbar-default",

@@ -6,6 +6,7 @@ Seismics and seismology (``fatiando.seismic``)
 .. automodule:: fatiando.seismic
    :members:
    :show-inheritance:
+   :inherited-members:
 
 .. toctree::
     :hidden:
@@ -15,3 +16,4 @@ Seismics and seismology (``fatiando.seismic``)
     seismic.profile.rst
     seismic.srtomo.rst
     seismic.wavefd.rst
+    seismic.conv.rst
