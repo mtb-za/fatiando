@@ -207,7 +207,7 @@ def _upcontinue_space(x, y, data, shape, height):
 
 
 def tga(x, y, data, shape, method='fd'):
-    r"""
+    """
     Calculate the total gradient amplitude (TGA).
 
     This the same as the `3D analytic signal` of Roest et al. (1992), but we
