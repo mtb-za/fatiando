@@ -3,7 +3,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 from fatiando.gravmag import transform, prism
 from fatiando import gridder, utils
-from fatiando.mesher import Prism,PrismRelief
+from fatiando.mesher import Prism
 
 
 def _trim(array, shape, d=20):
@@ -202,7 +202,7 @@ def test_laplace_from_potential():
 
 def test_transform_tilt():
     "gravmag.transform tilt returns gradient correctly."
-    pass
+    pass #TODO: This test needs to be finished
     area = (-150, 150, -300, 300)
     shape = (100, 50)
     x, y = gridder.regular(area, shape)
@@ -210,6 +210,6 @@ def test_transform_tilt():
 
     nodes = (x, y, -1 * height)  # -1 is to convert height to z coordinate
     reference = 0  # z coordinate of the reference surface
-    relief = PrismRelief(reference, gridder.spacing(area, shape), nodes)
+    relief = Prism(reference, gridder.spacing(area, shape), nodes)
 
     tilt(x, y, relief, shape)
