@@ -141,7 +141,7 @@ def upcontinue(x, y, data, shape, height):
 
     .. note:: x, y, z and height should be in meters.
 
-    .. note:: It is not possible to get the FFT of a masked grid. The default `grid.interp` call will not be suitable. Use `extrapolate=True` or `algorithm='nearest'`.
+    .. note:: It is not possible to get the FFT of a masked grid. The default `gridder.interp()` call using minimum curvature will not be suitable. Use `extrapolate=True` or `algorithm='nearest'`.
 
     Parameters:
 
