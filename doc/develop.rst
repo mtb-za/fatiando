@@ -79,32 +79,30 @@ Setting up
 
 Once you have your fork and local clone, you should add it to your
 ``PYTHONPATH`` environment variable so that you can ``import fatiando``
-directly from the source (without installing it).
+directly from the source, without installing it in your system.
 
 First, make sure you have uninstalled Fatiando::
 
     pip uninstall fatiando
 
-In GNU/Linux (or MacOS), add the following lines to your ``~/.bashrc`` file::
-
-    export PYTHONPATH=path/to/fatiando/repository:$PYTHONPATH
-
-In Windows,
-create a ``PYTHONPATH`` variable and set it to the path to the ``fatiando``
-repository (e.g., ``C:\Documents\User\repos\fatiando``).
-Follow
-`this guide <http://www.computerhope.com/issues/ch000549.htm>`__
-for instructions on setting environment variables.
-
 You will need some extra dependencies installed for development.
-If you are using Anaconda (and you should) run the following from the
-repository base directory::
+If you are using Anaconda (and you should),
+the repository provides an `environment.yml` file that specifies a `conda`
+virtual environment with all packages that you'll need.
+This will keep the Fatiando development related installation from you main
+Python.
+Run the following from the repository base directory to create the environment::
 
-    conda install --file test/requirements-conda.txt
+    conda env create
 
-and::
+Now, whenever you want to run code using the `fatiando-dev` environment we just
+created, you must run this first to activate the environment::
 
-    pip install -r test/requirements-pip.txt
+    source activate fatiando-dev
+
+or on Windows::
+
+    activate fatiando-dev
 
 You will also need `make <http://www.gnu.org/software/make/>`__, which usually
 comes with GNU/Linux by default. On windows, you can get it through
@@ -131,15 +129,19 @@ style, building the documentation, etc.
     <http://software-carpentry.org/>`__.
 
 
-To build the C-extensions (all of the ``.c`` files in the ``fatiando``
-folder)::
+We need to make Python use our source files from the repository, not an
+installed version.
+To do this, we can install Fatiando in editable mode::
 
-    make build
+    make develop
 
-If the repository is in your ``PYTHONPATH`` you will now be able to ``import
-fatiando`` and use it directly from the repository.
-This is important for running and testing the new code you are making
-(that is why you can't use the installed version of Fatiando).
+or running directly::
+
+    pip install -e .
+
+You will now be able to ``import fatiando`` and use it directly from the
+repository.  This is important for running and testing the new code you are
+making (that is why you can't use the installed version of Fatiando).
 
 The ``.c`` files were automatically generated using
 `Cython <http://cython.org/>`__ from the ``.pyx`` files.
@@ -166,7 +168,7 @@ unit tests and doc tests.
 
 .. note::
 
-    If you are new to automated tests, see the Software Carpentry lessons on 
+    If you are new to automated tests, see the Software Carpentry lessons on
     `Testing: Unit Testing
     <http://software-carpentry.org/>`__.
 
@@ -385,11 +387,12 @@ Run this in your terminal/cmd.exe::
 
 To compile the documentation, run::
 
-    make docs
+    cd doc
+    make all
 
-To view the compiled HTML files, run::
+To view the compiled HTML files, run this inside the ``doc`` folder::
 
-    make view-docs
+    make serve
 
 This will start a server in the ``doc/_build/html`` folder.
 Point your browser to `http://127.0.0.1:8008 <http://127.0.0.1:8008/>`__
@@ -464,7 +467,7 @@ Check if there isn't an issue open for this already.
 This way we can keep track of who is working on what and avoid duplicated work.
 
 To help keep track of what you need to do,
-copy this checklist to the PR description
+a checklist will be automatically inserted into the pull request description
 (adapted from the
 `khmer docs
 <http://khmer.readthedocs.org/en/v1.1/development.html#checklist>`__)::
