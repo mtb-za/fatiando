@@ -10,6 +10,21 @@ Version 0.5
 
 **Changes**:
 
+* Remove unused module ``fatiando.gravmag.half_sph_shell``. It was used to test
+  ``fatiando.gravmag.tesseroid`` but has been replaced by a full spherical
+  shell solution that is coded in the tests. It serves no purpose so it should
+  be removed to avoid having to maintain it.
+  (`PR 288 <https://github.com/fatiando/fatiando/pull/288>`__)
+* Rename the Euler deconvolution classes to ``EulerDeconv`` (old ``Classic``
+  class, a terrible name choice in retrospect), ``EulerDeconvMW`` for the
+  moving window solver, and ``EulerDeconvEW`` for the expanding window solver.
+  These names are more unique and will not clash with any other class. This is
+  crucial to establish a nice API for ``fatiando.gravmag``.
+  (`PR 286 <https://github.com/fatiando/fatiando/pull/286>`__)
+* Started an example gallery (`matplotlib style
+  <http://matplotlib.org/gallery.html>`__) using the Sphinx plug-in
+  `sphinx-gallery <http://sphinx-gallery.readthedocs.io/>`__.
+  (`PR 282 <https://github.com/fatiando/fatiando/pull/282>`__)
 * Added several functions for padding arrays of arbitrary dimension.
   ``fatiando.gridder.pad_array`` pads an array with a variety of padding and
   taper options.  ``fatiando.gridder.unpad_array`` returns the original,
