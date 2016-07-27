@@ -10,6 +10,12 @@ Version 0.5
 
 **Changes**:
 
+* Move from ``distutils`` to ``setuptools`` in ``setup.py``, as recommended in
+  the `Python Packaging User Guide <https://packaging.python.org/>`__.
+  (`PR 294 <https://github.com/fatiando/fatiando/pull/294>`__)
+* Enable ``fatiando.mesher.PointGrid`` to have points at different depths by
+  passing it an array as the ``z`` argument.
+  (`PR 283 <https://github.com/fatiando/fatiando/pull/283>`__)
 * Replace `nose <http://nose.readthedocs.io/>`__ with `py.test
   <http://pytest.org/>`__ as our unit testing framework. Tests are now located
   in the package ``fatiando.tests`` and installed with Fatiando. This means
@@ -40,6 +46,17 @@ Version 0.5
 * Better navigation for long pages in the docs by adding a sidebar with links
   to subsections.
   (`PR 275 <https://github.com/fatiando/fatiando/pull/275>`__)
+* Added back-end support for decorators from `duecredit
+  <https://github.com/duecredit/duecredit/>`__ to be added to methods. This
+  allows a report for per-method citations based on the methods used in a given
+  script. Currently only implemented for `gravmag/magdir` but will be added to
+  all methods in time.
+  (`PR 293 <https://github.com/fatiando/fatiando/pull/293>`__)
+* Added function for tilt derivative filter for gravmag data.
+  ``fatiando.gravmag.transform.tilt`` returns a value between -90 and 90
+  degrees, with the 0 value being located over or nearly over the edge of a
+  given anomaly.
+  (`PR 261 <https://github.com/fatiando/fatiando/pull/261>`__)
 
 
 
@@ -84,12 +101,12 @@ Version 0.4
   now should catch any future problems.
   (`PR 209 <https://github.com/fatiando/fatiando/pull/209>`__)
 * **IMPORTANT BUG FIX**: ``fatiando.gridder.regular`` and many other places in
-  Fatiando where using the wrong convention for x, y dimensions.
+  Fatiando were using the wrong convention for x, y dimensions.
   x should point North and y East. Thus, a data matrix (regular grid) should
-  have x varying in the lines and y varying in the columns. This is **oposite**
-  what we had. This fix also changes the ``shape`` argument to be ``(nx, ny)``
-  instead of ``(ny, nx)``. **Users should be aware of this and double check
-  their code.**
+  have x varying in the lines and y varying in the columns. This is
+  **opposite** what we had. This fix also changes the ``shape`` argument to be
+  ``(nx, ny)`` instead of ``(ny, nx)``. **Users should be aware of this and
+  double check their code.**
   (`PR 196 <https://github.com/fatiando/fatiando/pull/196>`__)
 * More stable derivatives in ``fatiando.gravamag.transform``. The horizontal
   derivatives default to central finite-differences for greater stability. The
