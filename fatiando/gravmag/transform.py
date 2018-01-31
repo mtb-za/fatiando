@@ -32,10 +32,13 @@ Potential field transformations, like upward continuation and derivatives.
 from __future__ import division, absolute_import
 import warnings
 import numpy
+from .._our_duecredit import due, Doi, BibTeX
 
 from .. import utils
 
 
+@due.dcite(Doi("10.1017/CBO9780511549816"),
+           description="Good overview of potential field methods in general.")
 def reduce_to_pole(x, y, data, shape, inc, dec, sinc, sdec):
     r"""
     Reduce total field magnetic anomaly data to the pole.
@@ -128,6 +131,8 @@ def reduce_to_pole(x, y, data, shape, inc, dec, sinc, sdec):
     return numpy.real(numpy.fft.ifft2(ft_pole)).ravel()
 
 
+@due.dcite(Doi("10.1017/CBO9780511549816"),
+           description="Good overview of potential field methods in general.")
 def upcontinue(x, y, data, shape, height):
     r"""
     Upward continuation of potential field data.
@@ -213,6 +218,8 @@ def _upcontinue_space(x, y, data, shape, height):
     return cont
 
 
+@due.dcite(Doi("10.1190/1.1443174"),
+           description="Establishment of 3D AS")
 def tga(x, y, data, shape, method='fd'):
     r"""
     Calculate the total gradient amplitude (TGA).
@@ -276,6 +283,8 @@ def tga(x, y, data, shape, method='fd'):
     return res
 
 
+@due.dcite(Doi("10.1016/0926-9851(94)90022-1"),
+           description="First paper describing the tilt angle.")
 def tilt(x, y, data, shape, xderiv=None, yderiv=None, zderiv=None):
     r"""
     Calculates the potential field tilt, as defined by Miller and Singh (1994)
