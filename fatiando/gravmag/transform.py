@@ -220,6 +220,8 @@ def _upcontinue_space(x, y, data, shape, height):
 
 @due.dcite(Doi("10.1190/1.1443174"),
            description="Establishment of 3D AS")
+@due.dcite(Doi("10.1190/segam2012-0178.1"),
+           description="Good general advice on potential field geophysics.")
 def tga(x, y, data, shape, method='fd'):
     r"""
     Calculate the total gradient amplitude (TGA).

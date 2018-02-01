@@ -59,8 +59,15 @@ from fatiando.gravmag import transform
 from fatiando.gravmag import prism as pot_prism
 from fatiando.constants import G
 from fatiando import utils
+from .._our_duecredit import due, Doi, BibTeX
 
 
+@due.dcite(Doi("10.1111/j.1365-2478.2011.01005.x"),
+           description="Basis for 3D migration.",
+           path='fatiando.gravmag.imaging')
+@due.dcite(Doi("10.1190/geo2011-0078.1"),
+           description="Uses the formaula from this paper, which are easier.",
+           path='fatiando.gravmag.imaging')
 def migrate(x, y, z, gz, zmin, zmax, meshshape, power=0.5, scale=1):
     """
     3D potential field migration (Zhdanov et al., 2011).
@@ -120,6 +127,10 @@ def migrate(x, y, z, gz, zmin, zmax, meshshape, power=0.5, scale=1):
     return mesh
 
 
+@due.dcite(Doi("10.1190/1.1443129"),
+           description="Implements the sandwich model from this paper.")
+@due.dcite(Doi("10.1190/1.1444214"),
+           description="Provides the depth weighting.")
 def sandwich(x, y, z, data, shape, zmin, zmax, nlayers, power=0.5):
     """
     Sandwich model (Pedersen, 1991).
@@ -188,6 +199,8 @@ def sandwich(x, y, z, data, shape, zmin, zmax, nlayers, power=0.5):
     return mesh
 
 
+@due.dcite(Doi("10.1190/1.1440686"),
+           description="Basis for inverse imaging in frequency domain.")
 def geninv(x, y, z, data, shape, zmin, zmax, nlayers):
     """
     Generalized Inverse imaging in the frequency domain (Cribb, 1976).

@@ -28,7 +28,11 @@ from .._our_duecredit import due, Doi, BibTeX
 
 
 @due.dcite(Doi("10.5194/npg-22-215-2015"),
-           description='Estimates total mag. dir. of approx. spherical bodies')
+           description='Estimates total mag. dir. of approx. spherical bodies',
+           path='fatiando.gravmag.magdir')
+@due.dcite(Doi("10.1017/CBO9780511549816"),
+           description="Good overview of potential field methods in general.",
+           path='fatiando.gravmag.magdir')
 class DipoleMagDir(Misfit):
     """
     Estimate the magnetization vector of a set of dipoles from magnetic

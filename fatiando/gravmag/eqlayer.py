@@ -1,3 +1,4 @@
+
 """
 Equivalent layer processing.
 
@@ -38,6 +39,16 @@ import scipy.sparse
 from . import sphere as kernel
 from ..utils import dircos, safe_dot
 from ..inversion import Misfit, Smoothness
+from .._our_duecredit import due, Doi, BibTeX
+
+due.cite(
+         Doi("10.1190/1.3378764"),
+         description="Wavelet approach to creating equivalent layers."
+         )
+due.cite(
+         Doi("10.1190/geo2012-0196.1")
+         description="A polynomial method for speeding up equivalent layers."
+         )
 
 
 class EQLBase(Misfit):

@@ -26,6 +26,11 @@ import numpy
 from numpy import arctan2, pi, sin, cos, log, tan
 
 from fatiando.constants import G, SI2MGAL
+from .._our_duecredit import due, Doi, BibTeX
+
+due.cite(Doi("10.1029/JZ064i001p00049"),
+         description="Basic Talwani method for gravity.",
+         path='fatiando.gravmag.talwani')
 
 
 def gz(xp, zp, polygons, dens=None):

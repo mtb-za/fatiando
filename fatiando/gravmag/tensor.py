@@ -48,6 +48,12 @@ import numpy.linalg
 
 from .. import gridder
 from ..utils import safe_solve
+from .._our_duecredit import due, Doi, BibTeX
+
+due.cite(Doi("10.1190/1.1442807"),
+         description=
+         "Underlying theory for gradient tensors in potential fields.",
+         path='fatiando.gravmag.tensor')
 
 
 def invariants(tensor):

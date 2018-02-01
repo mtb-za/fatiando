@@ -93,8 +93,18 @@ try:
     from . import _prism
 except ImportError:
     _prism = None
+from .._our_duecredit import due, Doi, BibTeX
+
+due.cite(Doi("10.1007/s001900000116"),
+         description="Gravity prism formulations.",
+         path='fatiando.gravmag.prism')
+due.cite(Doi("10.1190/1.1439386"),
+         description="Magnetic prism formulations.",
+         path='fatiando.gravmag.prism')
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def potential(xp, yp, zp, prisms, dens=None):
     """
     Calculates the gravitational potential.
@@ -143,6 +153,8 @@ def potential(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gx(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_x` gravity acceleration component.
@@ -191,6 +203,8 @@ def gx(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gy(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_y` gravity acceleration component.
@@ -239,6 +253,8 @@ def gy(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gz(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_z` gravity acceleration component.
@@ -287,6 +303,8 @@ def gz(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gxx(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_{xx}` gravity gradient tensor component.
@@ -335,6 +353,8 @@ def gxx(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gxy(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_{xy}` gravity gradient tensor component.
@@ -391,6 +411,8 @@ def gxy(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gxz(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_{xz}` gravity gradient tensor component.
@@ -447,6 +469,8 @@ def gxz(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gyy(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_{yy}` gravity gradient tensor component.
@@ -495,6 +519,8 @@ def gyy(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gyz(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_{yz}` gravity gradient tensor component.
@@ -551,6 +577,8 @@ def gyz(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1007/s001900000116"),
+           description="Gravity prism formulations.")
 def gzz(xp, yp, zp, prisms, dens=None):
     """
     Calculates the :math:`g_{zz}` gravity gradient tensor component.
@@ -599,6 +627,8 @@ def gzz(xp, yp, zp, prisms, dens=None):
     return res
 
 
+@due.dcite(Doi("10.1190/1.1439386"),
+           description="Magnetic prism formulations.")
 def tf(xp, yp, zp, prisms, inc, dec, pmag=None):
     """
     Calculate the total-field magnetic anomaly of prisms.
@@ -662,6 +692,8 @@ def tf(xp, yp, zp, prisms, inc, dec, pmag=None):
     return res
 
 
+@due.dcite(Doi("10.1190/1.1439386"),
+           description="Magnetic prism formulations.")
 def bx(xp, yp, zp, prisms, pmag=None):
     """
     Calculates the x component of the magnetic induction produced by
@@ -708,6 +740,8 @@ def bx(xp, yp, zp, prisms, pmag=None):
     return res
 
 
+@due.dcite(Doi("10.1190/1.1439386"),
+           description="Magnetic prism formulations.")
 def by(xp, yp, zp, prisms, pmag=None):
     """
     Calculates the y component of the magnetic induction produced by
@@ -754,6 +788,8 @@ def by(xp, yp, zp, prisms, pmag=None):
     return res
 
 
+@due.dcite(Doi("10.1190/1.1439386"),
+           description="Magnetic prism formulations.")
 def bz(xp, yp, zp, prisms, pmag=None):
     """
     Calculates the z component of the magnetic induction produced by

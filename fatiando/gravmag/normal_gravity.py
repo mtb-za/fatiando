@@ -78,6 +78,21 @@ import numpy
 
 from .. import utils
 from ..constants import G
+from .._our_duecredit import due, Doi, BibTeX
+
+due.cite(Doi("10.1190/1.1487109"),
+         description='Calculation for normal gravity at a height.',
+         path='fatiando.gravmag.normal_gravity')
+due.cite(BibTeX('''
+                author = {B Hofmann-Wellenhof and H. Moritz},
+                date = {2005},
+                title = {Physical Geodesy},
+                publisher = {Springer-Verlag},
+                place = {Wien},
+                isbn = {978-3-211-23584-3},
+                '''),
+         description='Source for many of the formulae.',
+         path='fatiando.gravmag.normal_gravity')
 
 
 class ReferenceEllipsoid(object):
@@ -230,6 +245,8 @@ def gamma_somigliana_free_air(latitude, height, ellipsoid=WGS84):
     return gamma
 
 
+@due.dcite(Doi("10.1190/1.1487109"),
+           description="Provides closed form expression for normal grav.")
 def gamma_closed_form(latitude, height, ellipsoid=WGS84):
     """
     Calculate normal gravity at a height using the closed form expression of

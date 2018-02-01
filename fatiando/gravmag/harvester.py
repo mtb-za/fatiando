@@ -76,6 +76,21 @@ from fatiando.gravmag import prism as prism_engine
 from fatiando.gravmag import tesseroid as tesseroid_engine
 from fatiando import utils
 from fatiando.mesher import Prism, Tesseroid
+from .._our_duecredit import due, Doi, BibTeX
+
+due.cite(BibTeX('''
+@article{ueida_2012a,
+author = {Uieda, L., and V. C. F. Barbosa},
+date = {2012},
+title = {Robust 3D gravity gradient inversion by planting anomalous densities}, publication = {Geophysics},
+volume = {77},
+issue = {4},
+pages = {G55-G66},
+doi = {10.1190/geo2011-0388.1}
+}'''))
+due.cite(Doi("10.1190/segam2012-0383.1"),
+         description='Improvements to the basic method.',
+         path='fatiando.gravmag.harvester')
 
 
 def loadseeds(fname):
